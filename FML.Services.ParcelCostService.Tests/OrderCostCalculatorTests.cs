@@ -1,4 +1,5 @@
 ﻿using FML.Services.ParcelCostService.Pricing.Model;
+using NUnit.Framework;
 
 namespace FML.Services.ParcelCostService.Tests
 {
@@ -116,9 +117,42 @@ namespace FML.Services.ParcelCostService.Tests
 
 			order.Parcels.Add(new(width: 10, height: 10, length: 5, weight: 2));
 			order.Parcels.Add(new(width: 2, height: 20, length: 3, weight: 4));
-			decimal expectedTotalCost = 
-				16	/* Without SpeedyShipment */
-			+	2	/* With 2kg extra for the second Medium sized parcel. */
+			decimal expectedTotalCost =
+				16  /* Without SpeedyShipment */
+			+ 2 /* With 2kg extra for the second Medium sized parcel. */
+			;
+
+			var orderCostCalculator = new OrderDeliveryCostCalculator();
+
+			// Act
+			var result = orderCostCalculator.BuildPricingModel(order);
+
+			//Assert
+			var total = result.Where(item => item.PricingContextItemType == PricingContextItemType.TotalCost);
+
+			Assert.That(total.Count(), Is.EqualTo(1));
+			Assert.That(total.Single().Cost, Is.EqualTo(expectedTotalCost));
+		}
+
+		/// <summary>
+		/// 4) Some of the extra weight charges for certain goods were excessive. A new parcel type has been added to try and address overweight parcels
+		///
+		///		Heavy parcel, $50 up to 50kg +$1/kg over 50kg
+		/// </summary>
+		[Test]
+		public void EnsureCorrectOrderDeliveryCostCalculationForHeavyParcels()
+		{
+			// Arrange
+			var order = new Order()
+			{
+				SpeedyShipping = false
+			};
+
+			order.Parcels.Add(new(width: 10, height: 10, length: 5, weight: 2));
+			order.Parcels.Add(new(width: 2, height: 20, length: 3, weight: 51));
+			decimal expectedTotalCost =
+				16  /* Without SpeedyShipment */
+			+	51  /* With 50$ for Heavy parcel and 1$ for 1kg extra of the same parcel. */
 			;
 
 			var orderCostCalculator = new OrderDeliveryCostCalculator();

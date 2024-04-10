@@ -13,11 +13,13 @@ namespace FML.Services.ParcelCostService
 			this.ParcelProcessors = [
 				new ParcelDimensionStrategy(),
 				new ParcelWeightLimitStrategy(),
+				new HeavyParcelStrategy(),
 			];
 
 			this.OrderPricing = [
 				new ParcelBaseCostPricing(),
 				new OverWeightParcelPricing(),
+				new HeavyWeightParcelPricing(),
 				new SpeedyShippingPricing(),
 				new TotalPricing(),
 			];

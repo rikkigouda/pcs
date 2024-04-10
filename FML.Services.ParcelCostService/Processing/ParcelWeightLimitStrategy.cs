@@ -1,5 +1,4 @@
-﻿
-using FML.Services.ParcelCostService.Processing.Model;
+﻿using FML.Services.ParcelCostService.Processing.Model;
 
 namespace FML.Services.ParcelCostService.Processing
 {
@@ -30,11 +29,9 @@ namespace FML.Services.ParcelCostService.Processing
 					context.WeightLimit = 10;
 					break;
 
-				case ParcelSize.Heavy:
-					break;
-
 				default:
-					break;
+
+					throw new UnsupportedParcelSizeException(context.Size);
 			}
 		}
 	}

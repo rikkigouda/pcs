@@ -2,24 +2,24 @@
 
 namespace FML.Services.ParcelCostService.Pricing
 {
-	public class OverWeightParcelPricing
+	public class HeavyWeightParcelPricing
 		: BasePricing
 	{
 		public override void Calculate(PricingContext context)
 		{
+			decimal heavyWeight = 50;
+
 			context.OrderProcessingContext.ParcelProcessingContexts
-				.Where(item => item.Parcel.Weight > item.WeightLimit)
-				.Where(item => item.IsHeavy == false)
+				.Where(item => item.IsHeavy == true)
 				.ToList()
 				.ForEach(
 					(parcelProcessingContext) =>
 					{
-						var extraWeight = parcelProcessingContext.Parcel.Weight - parcelProcessingContext.WeightLimit;
-
 						context.PricingContextItems.Add(
 							new ParcelPricingContextItem(
 								parcelProcessingContext,
-								extraWeight * parcelProcessingContext.ExtraCostPerKg
+								50 /* Fixed 50$ figure for heavy parcels */
+							+	(parcelProcessingContext.Parcel.Weight - heavyWeight)
 							)
 						);
 					}
