@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FML.Services.ParcelCostService", "FML.Services.ParcelCostService\FML.Services.ParcelCostService.csproj", "{E9723EC5-0088-4949-9A52-38C34D1EA869}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FML.Services.ParcelCostService.Tests", "FML.Services.ParcelCostService.Tests\FML.Services.ParcelCostService.Tests.csproj", "{BA7F97E6-494D-4DFF-AFF2-D7F9FA7441EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E9723EC5-0088-4949-9A52-38C34D1EA869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9723EC5-0088-4949-9A52-38C34D1EA869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9723EC5-0088-4949-9A52-38C34D1EA869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9723EC5-0088-4949-9A52-38C34D1EA869}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA7F97E6-494D-4DFF-AFF2-D7F9FA7441EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA7F97E6-494D-4DFF-AFF2-D7F9FA7441EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA7F97E6-494D-4DFF-AFF2-D7F9FA7441EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA7F97E6-494D-4DFF-AFF2-D7F9FA7441EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0EDB9D93-6030-4731-93C2-2618917B1942}
+	EndGlobalSection
+EndGlobal
