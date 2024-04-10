@@ -7,19 +7,20 @@ namespace FML.Services.ParcelCostService.Pricing
 	{
 		public override void Calculate(PricingContext context)
 		{
-			context.OrderProcessingContext.ParcelProcessingContexts
-				.Where(item => item.Parcel.Weight > item.WeightLimit)
-				.Where(item => item.IsHeavy == false)
+			context.PricingContextItems.OfType<ParcelPricingContextItem>()
+				.Where(item => item.ParcelProcessingContext.Parcel.Weight > item.ParcelProcessingContext.WeightLimit)
+				.Where(item => item.ParcelProcessingContext.IsHeavy == false)
 				.ToList()
 				.ForEach(
-					(parcelProcessingContext) =>
+					(parcelPricingContextItem) =>
 					{
-						var extraWeight = parcelProcessingContext.Parcel.Weight - parcelProcessingContext.WeightLimit;
+						var extraWeight = parcelPricingContextItem.ParcelProcessingContext.Parcel.Weight - parcelPricingContextItem.ParcelProcessingContext.WeightLimit;
 
 						context.PricingContextItems.Add(
 							new ParcelPricingContextItem(
-								parcelProcessingContext,
-								extraWeight * parcelProcessingContext.ExtraCostPerKg
+								parcelPricingContextItem.ParcelProcessingContext,
+								extraWeight * parcelPricingContextItem.ParcelProcessingContext.ExtraCostPerKg,
+								PricingContextItemType.SpecialCost
 							)
 						);
 					}

@@ -4,16 +4,24 @@ namespace FML.Services.ParcelCostService.Pricing.Model
 {
     public class ParcelPricingContextItem
         : PricingContextItem
-    {
-        public ParcelPricingContextItem(
-            ParcelProcessingContext parcelProcessingContext,
-            decimal cost
-        )
-            : base(cost, PricingContextItemType.ItemisedCost)
-        {
-            ParcelProcessingContext = parcelProcessingContext;
-        }
+	{
+		public ParcelPricingContextItem(
+			ParcelProcessingContext parcelProcessingContext,
+			decimal cost,
+			PricingContextItemType pricingContextItemType
+		)
+			: base(cost, pricingContextItemType)
+		{
+			ParcelProcessingContext = parcelProcessingContext;
+		}
 
-        public ParcelProcessingContext ParcelProcessingContext { get; private set; }
+		public ParcelPricingContextItem(
+			ParcelProcessingContext parcelProcessingContext,
+			decimal cost
+		)
+			: this(parcelProcessingContext, cost, PricingContextItemType.ItemisedCost)
+		{ }
+
+		public ParcelProcessingContext ParcelProcessingContext { get; private set; }
     }
 }

@@ -9,17 +9,19 @@ namespace FML.Services.ParcelCostService.Pricing
 		{
 			decimal heavyWeight = 50;
 
-			context.OrderProcessingContext.ParcelProcessingContexts
-				.Where(item => item.IsHeavy == true)
+			context.PricingContextItems.OfType<ParcelPricingContextItem>()
+				.Where(item => item.ParcelProcessingContext.IsHeavy == true)
 				.ToList()
 				.ForEach(
-					(parcelProcessingContext) =>
+					(parcelPricingContextItem) =>
 					{
+						context.PricingContextItems.Remove(parcelPricingContextItem);
+
 						context.PricingContextItems.Add(
 							new ParcelPricingContextItem(
-								parcelProcessingContext,
+								parcelPricingContextItem.ParcelProcessingContext,
 								50 /* Fixed 50$ figure for heavy parcels */
-							+	(parcelProcessingContext.Parcel.Weight - heavyWeight)
+							+	(parcelPricingContextItem.ParcelProcessingContext.Parcel.Weight - heavyWeight)
 							)
 						);
 					}

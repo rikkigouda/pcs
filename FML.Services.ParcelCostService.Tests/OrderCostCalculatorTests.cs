@@ -1,5 +1,7 @@
 ﻿using FML.Services.ParcelCostService.Pricing.Model;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using NUnit.Framework.Internal.Execution;
 
 namespace FML.Services.ParcelCostService.Tests
 {
@@ -17,7 +19,7 @@ namespace FML.Services.ParcelCostService.Tests
 		/// > Output should be a collection of items with their individual cost and type, as well as the total cost
 		/// </summary>
 		[Test]
-		public void EnsureCorrectOrderDeliveryCostCalculation()
+		public void EnsureCorrectOrderDeliveryCostBaseCalculation()
 		{
 			// Arrange
 			var order = new Order();
@@ -151,8 +153,8 @@ namespace FML.Services.ParcelCostService.Tests
 			order.Parcels.Add(new(width: 10, height: 10, length: 5, weight: 2));
 			order.Parcels.Add(new(width: 2, height: 20, length: 3, weight: 51));
 			decimal expectedTotalCost =
-				16  /* Without SpeedyShipment */
-			+	51  /* With 50$ for Heavy parcel and 1$ for 1kg extra of the same parcel. */
+				8  /* Without SpeedyShipment */
+			+ 51  /* With 50$ for Heavy parcel and 1$ for 1kg extra of the same parcel. */
 			;
 
 			var orderCostCalculator = new OrderDeliveryCostCalculator();
@@ -164,6 +166,56 @@ namespace FML.Services.ParcelCostService.Tests
 			var total = result.Where(item => item.PricingContextItemType == PricingContextItemType.TotalCost);
 
 			Assert.That(total.Count(), Is.EqualTo(1));
+			Assert.That(total.Single().Cost, Is.EqualTo(expectedTotalCost));
+		}
+
+		/// <summary>
+		/// 5) In order to award those who send multiple parcels, special discounts have been introduced.
+		///		● Small parcel mania! Every 4th small parcel in an order is free!
+		///		● Medium parcel mania! Every 3rd medium parcel in an order is free!
+		///		● Mixed parcel mania! Every 5th parcel in an order is free!
+		///		● Each parcel can only be used in a discount once
+		///		● Within each discount, the cheapest parcel is the free one
+		///		● The combination of discounts which saves the most money should be selected every time
+		///		
+		///		Example:
+		///			6x medium parcels. 3x $8, 3 x $10. 1st discount should include all 3 $8 parcels and save $8. 2nd discount should include all 3 $10 parcels and save $10.
+		///			● Just like speedy shipping, discounts should be listed as a separate item in the output, with associated saving, e.g. “-$2”
+		///			● Discounts should not impact the price of individual parcels, i.e.their individual cost should remain the same as it was before
+		///			● Speedy shipping applies after discounts are taken into account
+		/// </summary>
+		[Test]
+		public void EnsureCorrectOrderDeliveryCostCalculationForDiscountedParcels()
+		{
+			// Arrange
+			var order = new Order()
+			{
+				SpeedyShipping = false
+			};
+
+			order.Parcels.Add(new(width: 10, height: 10, length: 5, weight: 2));
+			order.Parcels.Add(new(width: 10, height: 10, length: 5, weight: 2));
+			order.Parcels.Add(new(width: 10, height: 10, length: 5, weight: 2));
+			order.Parcels.Add(new(width: 10, height: 10, length: 5, weight: 4));
+			order.Parcels.Add(new(width: 10, height: 10, length: 5, weight: 4));
+			order.Parcels.Add(new(width: 10, height: 10, length: 5, weight: 4));
+			decimal expectedTotalCost =
+				(3 * 8)  /* 3 Medium packages each 8$ */
+			+	(3 * 10)  /* 6 Medium packages each 10$ (CLARIFICATION REQUIRED: How did the 2nd set of Medium packages become 10$? I assumed it happened because of extra weight charges.) */
+			-	8  /* 1st 3rd item discount. */
+			-	10  /* 2nd 3rd item discount. */
+			;
+
+			var orderCostCalculator = new OrderDeliveryCostCalculator();
+
+			// Act
+			var result = orderCostCalculator.BuildPricingModel(order);
+
+			//Assert
+			var discountedItems = result.Where(item => item.PricingContextItemType == PricingContextItemType.Discount);
+			var total = result.Where(item => item.PricingContextItemType == PricingContextItemType.TotalCost);
+
+			Assert.That(discountedItems.Count(), Is.EqualTo(2));
 			Assert.That(total.Single().Cost, Is.EqualTo(expectedTotalCost));
 		}
 	}

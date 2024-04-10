@@ -20,6 +20,7 @@ namespace FML.Services.ParcelCostService
 				new ParcelBaseCostPricing(),
 				new OverWeightParcelPricing(),
 				new HeavyWeightParcelPricing(),
+				new DiscountPricing(),
 				new SpeedyShippingPricing(),
 				new TotalPricing(),
 			];
