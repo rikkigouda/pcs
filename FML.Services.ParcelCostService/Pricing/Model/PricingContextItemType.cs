@@ -4,6 +4,7 @@
     {
         ItemisedCost,
         Discount,
-        TotalCost
+        TotalCost,
+        SpecialCost
     }
 }

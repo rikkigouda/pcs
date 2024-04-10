@@ -17,6 +17,7 @@ namespace FML.Services.ParcelCostService
 
 			this.OrderPricing = [
 				new ParcelBaseCostPricing(),
+				new SpeedyShippingPricing(),
 				new TotalPricing(),
 			];
 		}
