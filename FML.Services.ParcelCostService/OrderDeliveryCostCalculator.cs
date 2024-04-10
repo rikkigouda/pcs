@@ -10,6 +10,7 @@ namespace FML.Services.ParcelCostService
 		public OrderDeliveryCostCalculator()
 			: base()
 		{
+			// TODO: Dependency Injection and builder patterns come to mind in order to turn the following two set of services into a centralised control mechanism in order to support orchestrating orders and rules engine scenarios to load from a datasource in the future.
 			this.ParcelProcessors = [
 				new ParcelDimensionStrategy(),
 				new ParcelWeightLimitStrategy(),
@@ -21,7 +22,7 @@ namespace FML.Services.ParcelCostService
 				new OverWeightParcelPricing(),
 				new HeavyWeightParcelPricing(),
 				new DiscountPricing(),
-				new SpeedyShippingPricing(),
+				new SpeedyShippingPricing(), // Speedy shipping applies after discounts are taken into account
 				new TotalPricing(),
 			];
 		}
