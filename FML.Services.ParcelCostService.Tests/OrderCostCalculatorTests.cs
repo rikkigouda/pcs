@@ -1,9 +1,4 @@
 ﻿using FML.Services.ParcelCostService.Pricing.Model;
-using FML.Services.ParcelCostService.Processing.Model;
-using FML.Services.ParcelCostService.Processing;
-using System.Drawing;
-using System.Diagnostics;
-using System;
 
 namespace FML.Services.ParcelCostService.Tests
 {
@@ -27,7 +22,7 @@ namespace FML.Services.ParcelCostService.Tests
 			var order = new Order();
 
 			order.Parcels.Add(new(width: 10, height: 10, length: 5, weight: 2));
-			order.Parcels.Add(new(width: 2, height: 20, length: 3, weight: 25));
+			order.Parcels.Add(new(width: 2, height: 20, length: 3, weight: 3));
 			decimal expectedTotalCost = 16;
 
 			var orderCostCalculator = new OrderDeliveryCostCalculator();
@@ -71,6 +66,7 @@ namespace FML.Services.ParcelCostService.Tests
 
 			Assert.That(total.Single().Cost, Is.EqualTo(expectedTotalCost));
 		}
+
 		/// <summary>
 		/// 2) Thanks to logistics improvements we can deliver parcels faster. This means we can charge more money.Speedy shipping can be selected by the user to take advantage of our improvements.
 		///		○ Speedy shipping doubles the cost of the entire order
@@ -87,8 +83,43 @@ namespace FML.Services.ParcelCostService.Tests
 			};
 
 			order.Parcels.Add(new(width: 10, height: 10, length: 5, weight: 2));
-			order.Parcels.Add(new(width: 2, height: 20, length: 3, weight: 25));
+			order.Parcels.Add(new(width: 2, height: 20, length: 3, weight: 3));
 			decimal expectedTotalCost = 32; // Including Speedy Shipment
+
+			var orderCostCalculator = new OrderDeliveryCostCalculator();
+
+			// Act
+			var result = orderCostCalculator.BuildPricingModel(order);
+
+			//Assert
+			var total = result.Where(item => item.PricingContextItemType == PricingContextItemType.TotalCost);
+
+			Assert.That(total.Count(), Is.EqualTo(1));
+			Assert.That(total.Single().Cost, Is.EqualTo(expectedTotalCost));
+		}
+
+		/// <summary>
+		/// 3) There have been complaints from delivery drivers that people are taking advantage of our dimension only shipping costs.A new weight limit has been added for each parcel type, over which a charge per kg applies +$2/kg over weight limit for parcel size:
+		///		● Small parcel: 1kg
+		///		● Medium parcel: 3kg
+		///		● Large parcel: 6kg
+		///		● XL parcel: 10kg
+		/// </summary>
+		[Test]
+		public void EnsureCorrectOrderDeliveryCostCalculationForOvereightParcels()
+		{
+			// Arrange
+			var order = new Order()
+			{
+				SpeedyShipping = false
+			};
+
+			order.Parcels.Add(new(width: 10, height: 10, length: 5, weight: 2));
+			order.Parcels.Add(new(width: 2, height: 20, length: 3, weight: 4));
+			decimal expectedTotalCost = 
+				16	/* Without SpeedyShipment */
+			+	2	/* With 2kg extra for the second Medium sized parcel. */
+			;
 
 			var orderCostCalculator = new OrderDeliveryCostCalculator();
 
