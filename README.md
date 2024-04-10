@@ -11,7 +11,7 @@
 - 16 unit tests pass:
   ![image](https://github.com/rikkigouda/pcs/assets/10061151/c8a751f9-2002-4834-a390-3d5bdfd79d9d)
 
-# Assumtions made
+# Assumptions made
 - There has been a number of assumptions I have made throughout the code - all detailed via compiler REVIEW/TODO flags.
 - The requirements raised few questions too which I hoped to raise in the presentation meeting.
 
