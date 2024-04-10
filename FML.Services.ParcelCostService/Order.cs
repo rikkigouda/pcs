@@ -7,7 +7,7 @@ public class Order
 		this.Parcels = new List<Parcel>();
 	}
 
-	public IList<Parcel> Parcels { get; private set; }
+	public List<Parcel> Parcels { get; set; }
 
 	public bool SpeedyShipping { get; set; }
 }

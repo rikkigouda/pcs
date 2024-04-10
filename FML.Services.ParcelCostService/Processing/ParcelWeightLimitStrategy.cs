@@ -1,7 +1,9 @@
 ﻿
+using FML.Services.ParcelCostService.Processing.Model;
+
 namespace FML.Services.ParcelCostService.Processing
 {
-	public class ParcelWeightLimitStrategy
+    public class ParcelWeightLimitStrategy
 		: IParcelProcessor
 	{
 		void IParcelProcessor.Setup(ParcelProcessingContext context)

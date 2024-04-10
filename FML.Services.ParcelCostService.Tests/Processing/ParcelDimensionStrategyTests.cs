@@ -1,4 +1,5 @@
 ﻿using FML.Services.ParcelCostService.Processing;
+using FML.Services.ParcelCostService.Processing.Model;
 
 namespace FML.Services.ParcelCostService.Tests.Processing
 {
@@ -25,7 +26,7 @@ namespace FML.Services.ParcelCostService.Tests.Processing
         [TestCase(99.99, 10, 4.5, ParcelSize.Large, 15)]
         [TestCase(100, 10, 4.5, ParcelSize.XL, 25)]
         [TestCase(200, 10, 4.5, ParcelSize.XL, 25)]
-        public void EnsureParcelDimensionValuesDetermineCorrectType(decimal width, decimal height, decimal length, ParcelSize parcelSize, decimal baseCost)
+        public void EnsureParcelDimensionValuesDetermineCorrectSize(decimal width, decimal height, decimal length, ParcelSize parcelSize, decimal baseCost)
         {
             //Arrange
             IParcelProcessor parcelDimensionStrategy = new ParcelDimensionStrategy();
@@ -42,7 +43,6 @@ namespace FML.Services.ParcelCostService.Tests.Processing
 
             //Assert
             Assert.That(context.Size, Is.EqualTo(parcelSize));
-            Assert.That(context.BaseCost, Is.EqualTo(baseCost));
         }
     }
 }

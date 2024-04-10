@@ -6,14 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Pricing\**" />
-    <EmbeddedResource Remove="Pricing\**" />
-    <None Remove="Pricing\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="DeliveryCostCalculator.cs" />
-  </ItemGroup>
-
 </Project>
